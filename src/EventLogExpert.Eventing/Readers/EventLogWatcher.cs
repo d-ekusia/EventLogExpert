@@ -90,7 +90,8 @@ public sealed partial class EventLogWatcher(string path, string? bookmark, bool 
                 {
                     @event = EventMethods.RenderEvent(eventHandle);
                     @event.Properties = EventMethods.RenderEventProperties(eventHandle);
-
+                    @event.PathName = path;
+                    @event.PathType = PathType.LogName;
                     if (_renderXml)
                     {
                         @event.Xml = EventMethods.RenderEventXml(eventHandle);
@@ -98,7 +99,7 @@ public sealed partial class EventLogWatcher(string path, string? bookmark, bool 
                 }
                 catch (Exception ex)
                 {
-                    @event = new EventRecord { RecordId = null, Error = ex.Message };
+                    @event = new EventRecord { RecordId = null, Error = ex.Message, PathName = path, PathType = PathType.LogName };
                 }
 
                 EventRecordWritten?.Invoke(this, @event);
